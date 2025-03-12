@@ -9,7 +9,269 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      flight_search_results: {
+        Row: {
+          airline: string
+          arrival_time: string
+          cabin_class: string | null
+          created_at: string | null
+          currency: string | null
+          data_source: string
+          deep_link: string | null
+          departure_date: string
+          departure_time: string
+          destination: string
+          duration: number
+          flight_number: string
+          id: string
+          layover_airports: string[] | null
+          layovers: number | null
+          origin: string
+          price: number
+          return_date: string | null
+          search_id: string
+          seats_available: number | null
+        }
+        Insert: {
+          airline: string
+          arrival_time: string
+          cabin_class?: string | null
+          created_at?: string | null
+          currency?: string | null
+          data_source: string
+          deep_link?: string | null
+          departure_date: string
+          departure_time: string
+          destination: string
+          duration: number
+          flight_number: string
+          id?: string
+          layover_airports?: string[] | null
+          layovers?: number | null
+          origin: string
+          price: number
+          return_date?: string | null
+          search_id: string
+          seats_available?: number | null
+        }
+        Update: {
+          airline?: string
+          arrival_time?: string
+          cabin_class?: string | null
+          created_at?: string | null
+          currency?: string | null
+          data_source?: string
+          deep_link?: string | null
+          departure_date?: string
+          departure_time?: string
+          destination?: string
+          duration?: number
+          flight_number?: string
+          id?: string
+          layover_airports?: string[] | null
+          layovers?: number | null
+          origin?: string
+          price?: number
+          return_date?: string | null
+          search_id?: string
+          seats_available?: number | null
+        }
+        Relationships: []
+      }
+      price_alerts: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          last_triggered: string | null
+          price_threshold: number
+          search_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_triggered?: string | null
+          price_threshold: number
+          search_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_triggered?: string | null
+          price_threshold?: number
+          search_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      price_history: {
+        Row: {
+          airline: string
+          currency: string | null
+          departure_date: string
+          destination: string
+          id: string
+          origin: string
+          price: number
+          return_date: string | null
+          timestamp: string | null
+        }
+        Insert: {
+          airline: string
+          currency?: string | null
+          departure_date: string
+          destination: string
+          id?: string
+          origin: string
+          price: number
+          return_date?: string | null
+          timestamp?: string | null
+        }
+        Update: {
+          airline?: string
+          currency?: string | null
+          departure_date?: string
+          destination?: string
+          id?: string
+          origin?: string
+          price?: number
+          return_date?: string | null
+          timestamp?: string | null
+        }
+        Relationships: []
+      }
+      recurring_searches: {
+        Row: {
+          created_at: string | null
+          departure_date: string
+          destination: string
+          id: string
+          is_active: boolean | null
+          last_checked: string | null
+          max_price: number | null
+          min_price: number | null
+          origin: string
+          return_date: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          departure_date: string
+          destination: string
+          id?: string
+          is_active?: boolean | null
+          last_checked?: string | null
+          max_price?: number | null
+          min_price?: number | null
+          origin: string
+          return_date?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          departure_date?: string
+          destination?: string
+          id?: string
+          is_active?: boolean | null
+          last_checked?: string | null
+          max_price?: number | null
+          min_price?: number | null
+          origin?: string
+          return_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_notifications: {
+        Row: {
+          alert_id: string | null
+          created_at: string | null
+          id: string
+          message: string
+          read: boolean | null
+          user_id: string
+        }
+        Insert: {
+          alert_id?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          read?: boolean | null
+          user_id: string
+        }
+        Update: {
+          alert_id?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          read?: boolean | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notifications_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "price_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_preferences: {
+        Row: {
+          allow_layovers: boolean | null
+          cabin_class: string | null
+          created_at: string | null
+          destination: string
+          id: string
+          max_budget: number | null
+          max_duration: number | null
+          origin: string
+          preferred_airlines: string[] | null
+          preferred_arrival_time: string | null
+          preferred_departure_time: string | null
+          trip_duration: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          allow_layovers?: boolean | null
+          cabin_class?: string | null
+          created_at?: string | null
+          destination: string
+          id?: string
+          max_budget?: number | null
+          max_duration?: number | null
+          origin: string
+          preferred_airlines?: string[] | null
+          preferred_arrival_time?: string | null
+          preferred_departure_time?: string | null
+          trip_duration?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          allow_layovers?: boolean | null
+          cabin_class?: string | null
+          created_at?: string | null
+          destination?: string
+          id?: string
+          max_budget?: number | null
+          max_duration?: number | null
+          origin?: string
+          preferred_airlines?: string[] | null
+          preferred_arrival_time?: string | null
+          preferred_departure_time?: string | null
+          trip_duration?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
