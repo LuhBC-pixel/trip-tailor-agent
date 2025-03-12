@@ -37,7 +37,7 @@ const FlightDetails = () => {
     queryFn: async () => {
       try {
         const response = await supabase.functions.invoke('flight-api', {
-          query: { 
+          params: { 
             action: 'get-price-history',
             origin,
             destination,
