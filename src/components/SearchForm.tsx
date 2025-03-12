@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Check, ChevronsUpDown, Clock, Plane, MapPin, DollarSign, CalendarRange, Users, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -55,6 +56,7 @@ const destinations = [
 ];
 
 const SearchForm = () => {
+  const navigate = useNavigate();
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [departureDate, setDepartureDate] = useState('');
@@ -72,20 +74,37 @@ const SearchForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!origin || !destination || !departureDate) {
+      toast.error('Por favor, preencha os campos obrigatórios: origem, destino e data de ida.');
+      return;
+    }
+    
     toast.success('Pesquisa iniciada! Buscando as melhores ofertas para você.');
     
-    // Here you would normally call an API to get flight results
-    console.log({
-      origin,
-      destination,
-      departureDate,
-      returnDate,
-      tripDuration,
-      passengers,
-      budget: budget[0],
-      preferredAirline,
-      allowLayovers,
-    });
+    // Construct the search parameters
+    const searchParams = new URLSearchParams();
+    searchParams.append('origin', origin);
+    searchParams.append('destination', destination);
+    searchParams.append('departureDate', departureDate);
+    
+    if (returnDate) {
+      searchParams.append('returnDate', returnDate);
+    }
+    
+    searchParams.append('passengers', passengers);
+    searchParams.append('tripDuration', tripDuration);
+    searchParams.append('budget', budget[0].toString());
+    
+    if (preferredAirline) {
+      searchParams.append('airline', preferredAirline);
+    }
+    
+    searchParams.append('allowLayovers', allowLayovers.toString());
+    
+    // Navigate to results page with query parameters
+    navigate(`/results?${searchParams.toString()}`);
   };
 
   return (
