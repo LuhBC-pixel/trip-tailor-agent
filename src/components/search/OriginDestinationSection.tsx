@@ -40,6 +40,9 @@ const OriginDestinationSection = ({
   const [openOrigin, setOpenOrigin] = useState(false);
   const [openDestination, setOpenDestination] = useState(false);
 
+  // Garantir que destinations nunca seja undefined
+  const destinationsList = destinations || [];
+
   return (
     <>
       {/* Origin */}
@@ -54,7 +57,7 @@ const OriginDestinationSection = ({
               className="w-full justify-between glass-input"
             >
               {origin
-                ? destinations.find((city) => city.value === origin)?.label
+                ? destinationsList.find((city) => city.value === origin)?.label
                 : "Selecione a cidade de origem"}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -64,7 +67,7 @@ const OriginDestinationSection = ({
               <CommandInput placeholder="Procurar cidade..." />
               <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
               <CommandGroup>
-                {destinations.map((city) => (
+                {destinationsList.map((city) => (
                   <CommandItem
                     key={city.value}
                     value={city.value}
@@ -101,7 +104,7 @@ const OriginDestinationSection = ({
               className="w-full justify-between glass-input"
             >
               {destination
-                ? destinations.find((city) => city.value === destination)?.label
+                ? destinationsList.find((city) => city.value === destination)?.label
                 : "Selecione a cidade de destino"}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -111,7 +114,7 @@ const OriginDestinationSection = ({
               <CommandInput placeholder="Procurar cidade..." />
               <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
               <CommandGroup>
-                {destinations.map((city) => (
+                {destinationsList.map((city) => (
                   <CommandItem
                     key={city.value}
                     value={city.value}
