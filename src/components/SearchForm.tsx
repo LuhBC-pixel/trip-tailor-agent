@@ -162,7 +162,7 @@ const SearchForm = () => {
                             key={city.value}
                             value={city.value}
                             onSelect={(currentValue) => {
-                              setOrigin(currentValue === origin ? "" : currentValue);
+                              setOrigin(currentValue);
                               setOpenOrigin(false);
                             }}
                           >
@@ -209,7 +209,7 @@ const SearchForm = () => {
                             key={city.value}
                             value={city.value}
                             onSelect={(currentValue) => {
-                              setDestination(currentValue === destination ? "" : currentValue);
+                              setDestination(currentValue);
                               setOpenDestination(false);
                             }}
                           >
@@ -396,7 +396,7 @@ const SearchForm = () => {
                               key={airline.value}
                               value={airline.value}
                               onSelect={(currentValue) => {
-                                setPreferredAirline(currentValue === preferredAirline ? "" : currentValue);
+                                setPreferredAirline(currentValue);
                                 setOpenAirline(false);
                               }}
                             >
