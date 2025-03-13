@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
@@ -14,8 +13,24 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const action = url.searchParams.get('action');
+    // Handle both URL params and body params
+    let action;
+    let params = {};
+    
+    if (req.method === 'GET') {
+      const url = new URL(req.url);
+      action = url.searchParams.get('action');
+      
+      // Get all params from URL
+      for (const [key, value] of url.searchParams.entries()) {
+        params[key] = value;
+      }
+    } else {
+      // Parse request body for POST/PUT requests
+      const body = await req.json();
+      action = body.action;
+      params = body;
+    }
 
     if (!action) {
       throw new Error("Ação não especificada");
@@ -30,19 +45,19 @@ serve(async (req) => {
 
     switch (action) {
       case 'get-price-history':
-        responseData = await getPriceHistory(req, supabase);
+        responseData = await getPriceHistory(params, supabase);
         break;
       case 'create-search':
-        responseData = await createSearch(req, supabase);
+        responseData = await createSearch(params, supabase);
         break;
       case 'create-alert':
-        responseData = await createAlert(req, supabase);
+        responseData = await createAlert(params, supabase);
         break;
       case 'get-user-alerts':
-        responseData = await getUserAlerts(req, supabase);
+        responseData = await getUserAlerts(params, supabase);
         break;
       case 'get-user-notifications':
-        responseData = await getUserNotifications(req, supabase);
+        responseData = await getUserNotifications(params, supabase);
         break;
       default:
         throw new Error(`Ação desconhecida: ${action}`);
@@ -62,11 +77,8 @@ serve(async (req) => {
 });
 
 // Obter histórico de preços
-async function getPriceHistory(req: Request, supabase) {
-  const url = new URL(req.url);
-  const origin = url.searchParams.get('origin');
-  const destination = url.searchParams.get('destination');
-  const departureDate = url.searchParams.get('departureDate');
+async function getPriceHistory(params, supabase) {
+  const { origin, destination, departureDate } = params;
   
   if (!origin || !destination) {
     throw new Error("Origem e destino são obrigatórios");
@@ -117,8 +129,8 @@ async function getPriceHistory(req: Request, supabase) {
 }
 
 // Criar uma nova busca recorrente
-async function createSearch(req: Request, supabase) {
-  const { userId, origin, destination, departureDate, returnDate, maxPrice, minPrice } = await req.json();
+async function createSearch(params, supabase) {
+  const { userId, origin, destination, departureDate, returnDate, maxPrice, minPrice } = params;
   
   if (!userId || !origin || !destination || !departureDate) {
     throw new Error("Dados obrigatórios não fornecidos");
@@ -146,8 +158,8 @@ async function createSearch(req: Request, supabase) {
 }
 
 // Criar um novo alerta de preço
-async function createAlert(req: Request, supabase) {
-  const { userId, searchId, priceThreshold } = await req.json();
+async function createAlert(params, supabase) {
+  const { userId, searchId, priceThreshold } = params;
   
   if (!userId || !searchId || !priceThreshold) {
     throw new Error("Dados obrigatórios não fornecidos");
@@ -171,9 +183,8 @@ async function createAlert(req: Request, supabase) {
 }
 
 // Obter alertas do usuário
-async function getUserAlerts(req: Request, supabase) {
-  const url = new URL(req.url);
-  const userId = url.searchParams.get('userId');
+async function getUserAlerts(params, supabase) {
+  const { userId } = params;
   
   if (!userId) {
     throw new Error("ID do usuário não fornecido");
@@ -196,9 +207,8 @@ async function getUserAlerts(req: Request, supabase) {
 }
 
 // Obter notificações do usuário
-async function getUserNotifications(req: Request, supabase) {
-  const url = new URL(req.url);
-  const userId = url.searchParams.get('userId');
+async function getUserNotifications(params, supabase) {
+  const { userId } = params;
   
   if (!userId) {
     throw new Error("ID do usuário não fornecido");

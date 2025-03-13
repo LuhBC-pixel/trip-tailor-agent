@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -37,7 +36,7 @@ const FlightDetails = () => {
     queryFn: async () => {
       try {
         const response = await supabase.functions.invoke('flight-api', {
-          params: { 
+          body: { 
             action: 'get-price-history',
             origin,
             destination,

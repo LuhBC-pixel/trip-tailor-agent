@@ -7,6 +7,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Configuração das credenciais da Amadeus API
+const AMADEUS_API_KEY = "BKRFG6C4GDCLIiaA8engS6S81uAce6EE";
+const AMADEUS_API_SECRET = "fUp1dfW94C6DtDva";
+
 interface FlightSearchParams {
   origin: string;
   destination: string;
@@ -30,13 +34,17 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-    const amadeusApiKey = Deno.env.get("AMADEUS_API_KEY") || "";
-    const amadeusApiSecret = Deno.env.get("AMADEUS_API_SECRET") || "";
+
+    // Usar as credenciais hard-coded se as variáveis de ambiente não estiverem disponíveis
+    const amadeusApiKey = Deno.env.get("AMADEUS_API_KEY") || AMADEUS_API_KEY;
+    const amadeusApiSecret = Deno.env.get("AMADEUS_API_SECRET") || AMADEUS_API_SECRET;
 
     // Verificar se as chaves de API estão configuradas
     if (!amadeusApiKey || !amadeusApiSecret) {
       throw new Error("API keys não configuradas");
     }
+
+    console.log("Iniciando busca automatizada de voos...");
 
     // Criar cliente Supabase com a chave de serviço para ignorar RLS
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -62,6 +70,7 @@ serve(async (req) => {
 
     // Obter token de acesso da Amadeus API
     const amadeusToken = await getAmadeusToken(amadeusApiKey, amadeusApiSecret);
+    console.log("Token Amadeus obtido com sucesso");
 
     // Processar cada pesquisa
     const results = await Promise.all(
@@ -75,8 +84,11 @@ serve(async (req) => {
         };
 
         try {
+          console.log(`Processando busca: ${search.origin} -> ${search.destination}, Data: ${search.departure_date}`);
+          
           // Buscar voos através da API da Amadeus
           const flights = await searchFlights(searchParams, amadeusToken);
+          console.log(`Encontrados ${flights.length} voos para a pesquisa ${search.id}`);
           
           // Inserir resultados no banco de dados
           if (flights && flights.length > 0) {
@@ -107,6 +119,8 @@ serve(async (req) => {
             if (insertError) {
               throw new Error(`Erro ao inserir resultados: ${insertError.message}`);
             }
+
+            console.log(`Resultados da pesquisa ${search.id} salvos com sucesso`);
 
             // Verificar alertas de preço
             await checkPriceAlerts(supabase, search.id, formattedFlights);
