@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import HeroSection from '@/components/HeroSection';
-import SearchForm from '@/components/SearchForm';
+import SearchForm from '@/components/search/SearchForm';
 import FlightCard from '@/components/FlightCard';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
