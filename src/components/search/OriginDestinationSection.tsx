@@ -35,13 +35,18 @@ const OriginDestinationSection = ({
   setOrigin,
   destination,
   setDestination,
-  destinations = [], // Forneça um array vazio como fallback
+  destinations = [], // Default to empty array if not provided
 }: OriginDestinationSectionProps) => {
   const [openOrigin, setOpenOrigin] = useState(false);
   const [openDestination, setOpenDestination] = useState(false);
 
-  // Garantir que destinations nunca seja undefined ou null
+  // Ensure destinations is an array
   const destinationsList = Array.isArray(destinations) ? destinations : [];
+
+  const getSelectedLabel = (value: string) => {
+    if (!value || destinationsList.length === 0) return null;
+    return destinationsList.find(city => city?.value === value)?.label;
+  };
 
   return (
     <>
@@ -56,9 +61,7 @@ const OriginDestinationSection = ({
               aria-expanded={openOrigin}
               className="w-full justify-between glass-input"
             >
-              {origin && destinationsList.length > 0
-                ? destinationsList.find((city) => city?.value === origin)?.label || "Selecione a cidade de origem"
-                : "Selecione a cidade de origem"}
+              {getSelectedLabel(origin) || "Selecione a cidade de origem"}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
@@ -103,9 +106,7 @@ const OriginDestinationSection = ({
               aria-expanded={openDestination}
               className="w-full justify-between glass-input"
             >
-              {destination && destinationsList.length > 0
-                ? destinationsList.find((city) => city?.value === destination)?.label || "Selecione a cidade de destino"
-                : "Selecione a cidade de destino"}
+              {getSelectedLabel(destination) || "Selecione a cidade de destino"}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>

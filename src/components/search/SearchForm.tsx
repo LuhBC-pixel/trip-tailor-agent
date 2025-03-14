@@ -25,9 +25,12 @@ const SearchForm = () => {
   const [allowLayovers, setAllowLayovers] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
-  // Garantir que as listas de destinos e companhias aéreas estejam definidas
-  const destinationsList = destinations || [];
-  const airlinesList = airlines || [];
+  // Ensure destinations and airlines are defined
+  const destinationsList = Array.isArray(destinations) ? destinations : [];
+  const airlinesList = Array.isArray(airlines) ? airlines : [];
+
+  // Debugging
+  console.log('Destinations available:', destinationsList);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
