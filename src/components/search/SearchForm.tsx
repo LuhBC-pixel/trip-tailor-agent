@@ -25,6 +25,10 @@ const SearchForm = () => {
   const [allowLayovers, setAllowLayovers] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  // Garantir que as listas de destinos e companhias aéreas estejam definidas
+  const destinationsList = destinations || [];
+  const airlinesList = airlines || [];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -93,7 +97,7 @@ const SearchForm = () => {
                 setOrigin={setOrigin}
                 destination={destination}
                 setDestination={setDestination}
-                destinations={destinations}
+                destinations={destinationsList}
               />
               
               <DateSelectionSection
@@ -132,7 +136,7 @@ const SearchForm = () => {
                 setPreferredAirline={setPreferredAirline}
                 allowLayovers={allowLayovers}
                 setAllowLayovers={setAllowLayovers}
-                airlines={airlines}
+                airlines={airlinesList}
               />
             )}
 

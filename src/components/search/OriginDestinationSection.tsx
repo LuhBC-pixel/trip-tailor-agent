@@ -35,13 +35,13 @@ const OriginDestinationSection = ({
   setOrigin,
   destination,
   setDestination,
-  destinations,
+  destinations = [], // Forneça um array vazio como fallback
 }: OriginDestinationSectionProps) => {
   const [openOrigin, setOpenOrigin] = useState(false);
   const [openDestination, setOpenDestination] = useState(false);
 
-  // Garantir que destinations nunca seja undefined
-  const destinationsList = destinations || [];
+  // Garantir que destinations nunca seja undefined ou null
+  const destinationsList = Array.isArray(destinations) ? destinations : [];
 
   return (
     <>
@@ -56,8 +56,8 @@ const OriginDestinationSection = ({
               aria-expanded={openOrigin}
               className="w-full justify-between glass-input"
             >
-              {origin
-                ? destinationsList.find((city) => city.value === origin)?.label
+              {origin && destinationsList.length > 0
+                ? destinationsList.find((city) => city?.value === origin)?.label || "Selecione a cidade de origem"
                 : "Selecione a cidade de origem"}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -103,8 +103,8 @@ const OriginDestinationSection = ({
               aria-expanded={openDestination}
               className="w-full justify-between glass-input"
             >
-              {destination
-                ? destinationsList.find((city) => city.value === destination)?.label
+              {destination && destinationsList.length > 0
+                ? destinationsList.find((city) => city?.value === destination)?.label || "Selecione a cidade de destino"
                 : "Selecione a cidade de destino"}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
