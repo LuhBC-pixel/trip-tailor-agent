@@ -98,7 +98,7 @@ const OriginDestinationSection = ({
                   <CommandItem
                     key={city.value}
                     value={city.value}
-                    onSelect={handleOriginSelect}
+                    onSelect={() => handleOriginSelect(city.value)}
                   >
                     <Check
                       className={cn(
@@ -144,7 +144,7 @@ const OriginDestinationSection = ({
                   <CommandItem
                     key={city.value}
                     value={city.value}
-                    onSelect={handleDestinationSelect}
+                    onSelect={() => handleDestinationSelect(city.value)}
                   >
                     <Check
                       className={cn(
