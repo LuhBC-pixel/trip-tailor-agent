@@ -36,18 +36,18 @@ const OriginDestinationSection = ({
   setOrigin,
   destination,
   setDestination,
-  destinations = [], // Default to empty array if not provided
+  destinations,
 }: OriginDestinationSectionProps) => {
   const [openOrigin, setOpenOrigin] = useState(false);
   const [openDestination, setOpenDestination] = useState(false);
 
-  // Ensure destinations is an array
+  // Ensure destinations is an array and has data
   const destinationsList = Array.isArray(destinations) ? destinations : [];
 
   const getSelectedLabel = (value: string) => {
-    if (!value || destinationsList.length === 0) return null;
-    const city = destinationsList.find(city => city?.value === value);
-    return city?.label;
+    if (!value) return "";
+    const city = destinationsList.find((city) => city?.value === value);
+    return city?.label || "";
   };
 
   // Handle selection for origin city
@@ -94,22 +94,24 @@ const OriginDestinationSection = ({
               <CommandInput placeholder="Procurar cidade..." />
               <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
               <CommandGroup>
-                {destinationsList.length > 0 ? destinationsList.map((city) => (
-                  <CommandItem
-                    key={city.value}
-                    value={city.value}
-                    onSelect={() => handleOriginSelect(city.value)}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        origin === city.value ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {city.label}
-                  </CommandItem>
-                )) : (
+                {destinationsList.length > 0 ? (
+                  destinationsList.map((city) => (
+                    <CommandItem
+                      key={city.value}
+                      value={city.value}
+                      onSelect={() => handleOriginSelect(city.value)}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          origin === city.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
+                      {city.label}
+                    </CommandItem>
+                  ))
+                ) : (
                   <CommandItem disabled>
                     Carregando cidades...
                   </CommandItem>
@@ -140,22 +142,24 @@ const OriginDestinationSection = ({
               <CommandInput placeholder="Procurar cidade..." />
               <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
               <CommandGroup>
-                {destinationsList.length > 0 ? destinationsList.map((city) => (
-                  <CommandItem
-                    key={city.value}
-                    value={city.value}
-                    onSelect={() => handleDestinationSelect(city.value)}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        destination === city.value ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {city.label}
-                  </CommandItem>
-                )) : (
+                {destinationsList.length > 0 ? (
+                  destinationsList.map((city) => (
+                    <CommandItem
+                      key={city.value}
+                      value={city.value}
+                      onSelect={() => handleDestinationSelect(city.value)}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          destination === city.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
+                      {city.label}
+                    </CommandItem>
+                  ))
+                ) : (
                   <CommandItem disabled>
                     Carregando cidades...
                   </CommandItem>
