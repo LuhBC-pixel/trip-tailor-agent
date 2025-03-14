@@ -16,6 +16,7 @@ import {
   CommandItem,
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 type DestinationType = {
   label: string;
@@ -45,7 +46,30 @@ const OriginDestinationSection = ({
 
   const getSelectedLabel = (value: string) => {
     if (!value || destinationsList.length === 0) return null;
-    return destinationsList.find(city => city?.value === value)?.label;
+    const city = destinationsList.find(city => city?.value === value);
+    return city?.label;
+  };
+
+  // Handle selection for origin city
+  const handleOriginSelect = (currentValue: string) => {
+    setOrigin(currentValue);
+    setOpenOrigin(false);
+    
+    // If same as destination, show toast warning
+    if (currentValue === destination && destination) {
+      toast.warning("Origem e destino não podem ser iguais");
+    }
+  };
+
+  // Handle selection for destination city
+  const handleDestinationSelect = (currentValue: string) => {
+    setDestination(currentValue);
+    setOpenDestination(false);
+    
+    // If same as origin, show toast warning
+    if (currentValue === origin && origin) {
+      toast.warning("Origem e destino não podem ser iguais");
+    }
   };
 
   return (
@@ -65,19 +89,16 @@ const OriginDestinationSection = ({
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
+          <PopoverContent className="w-full p-0 bg-background">
             <Command>
               <CommandInput placeholder="Procurar cidade..." />
               <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
               <CommandGroup>
-                {destinationsList.map((city) => (
+                {destinationsList.length > 0 ? destinationsList.map((city) => (
                   <CommandItem
                     key={city.value}
                     value={city.value}
-                    onSelect={(currentValue) => {
-                      setOrigin(currentValue);
-                      setOpenOrigin(false);
-                    }}
+                    onSelect={handleOriginSelect}
                   >
                     <Check
                       className={cn(
@@ -88,7 +109,11 @@ const OriginDestinationSection = ({
                     <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
                     {city.label}
                   </CommandItem>
-                ))}
+                )) : (
+                  <CommandItem disabled>
+                    Carregando cidades...
+                  </CommandItem>
+                )}
               </CommandGroup>
             </Command>
           </PopoverContent>
@@ -110,19 +135,16 @@ const OriginDestinationSection = ({
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
+          <PopoverContent className="w-full p-0 bg-background">
             <Command>
               <CommandInput placeholder="Procurar cidade..." />
               <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
               <CommandGroup>
-                {destinationsList.map((city) => (
+                {destinationsList.length > 0 ? destinationsList.map((city) => (
                   <CommandItem
                     key={city.value}
                     value={city.value}
-                    onSelect={(currentValue) => {
-                      setDestination(currentValue);
-                      setOpenDestination(false);
-                    }}
+                    onSelect={handleDestinationSelect}
                   >
                     <Check
                       className={cn(
@@ -133,7 +155,11 @@ const OriginDestinationSection = ({
                     <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
                     {city.label}
                   </CommandItem>
-                ))}
+                )) : (
+                  <CommandItem disabled>
+                    Carregando cidades...
+                  </CommandItem>
+                )}
               </CommandGroup>
             </Command>
           </PopoverContent>
