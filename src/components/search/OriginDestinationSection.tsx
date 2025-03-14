@@ -77,7 +77,7 @@ const OriginDestinationSection = ({
       {/* Origin */}
       <div className="space-y-2">
         <Label htmlFor="origin">Origem</Label>
-        <Popover open={openOrigin} onOpenChange={setOpenOrigin}>
+        <Popover open={openOrigin} onOpenChange={(open) => setOpenOrigin(open)}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -123,7 +123,7 @@ const OriginDestinationSection = ({
       {/* Destination */}
       <div className="space-y-2">
         <Label htmlFor="destination">Destino</Label>
-        <Popover open={openDestination} onOpenChange={setOpenDestination}>
+        <Popover open={openDestination} onOpenChange={(open) => setOpenDestination(open)}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
